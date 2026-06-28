@@ -1,47 +1,129 @@
-# Kekcoin Telegram Bot
+# 𓂀 Kekcoin Telegram Bot
 
-$KEK community bot — price commands, whale alerts, anti-FUD, daily digests.
+The official community bot for [$KEK](https://kekcoin69420.github.io/kekcoin/) — the first dogecoin derivative, born on 4chan's /s4s/, community-owned since December 11, 2025.
 
-## Setup
+[![Twitter](https://img.shields.io/badge/Twitter-@kekcoin69420-1DA1F2?logo=twitter)](https://x.com/kekcoin69420)
+[![Telegram](https://img.shields.io/badge/Telegram-Join%20the%20Temple-2CA5E0?logo=telegram)](https://t.me/kekcoincto_tg)
 
-1. Copy `.env.example` to `.env` and fill in values
-2. `pip install -r requirements.txt`
-3. `python bot.py`
+---
 
-## Deployment (Railway)
+## What it does
 
-1. Push to GitHub
-2. New Railway project → deploy from GitHub
-3. Add environment variables (see `.env.example`)
-4. Add Volume mounted at `/data`
-5. Railway auto-detects `Procfile` — uses `worker: python bot.py`
+- **Live price & chart** — real-time candlestick chart images (15m candles) from on-chain data
+- **Whale alerts** — automatic alerts when large buys or sells hit the pair
+- **Anti-FUD** — auto-deletes FUD messages, strikes repeat offenders, auto-mutes at threshold
+- **Daily digest** — 9am UTC price and stats summary posted to the group
+- **Community commands** — praise counter, lore, moon math, P&L calculator
+- **Admin tools** — warn, ban, announce, configure thresholds
 
-## Bot Permissions Required in Group
+---
+
+## Commands
+
+### Price
+| Command | Description |
+|---|---|
+| `/price` | Live price with 24h change, MC, volume |
+| `/stats` | Full stats including holder count and txns |
+| `/chart` | Candlestick chart image (15m candles) |
+| `/ca` | Contract address |
+| `/buy` | How to buy instructions |
+| `/ath` | All-time high price and market cap |
+| `/links` | All official links in one place |
+
+### Community
+| Command | Description |
+|---|---|
+| `/praise` | Offer praise to Kek (with milestones) |
+| `/kek` | Random $KEK lore quote |
+| `/moonmath [amount]` | Bag value at various MC targets |
+| `/hodlcheck [entry price]` | Your P&L from entry price |
+
+### Admin only
+| Command | Description |
+|---|---|
+| `/setwhale [usd]` | Set whale alert threshold |
+| `/addfud [keyword]` | Add a FUD keyword to auto-delete |
+| `/removefud [keyword]` | Remove a FUD keyword |
+| `/listfud` | List all active FUD keywords |
+| `/announce [text]` | Post a group announcement |
+| `/warn` | Reply to a message to warn that user |
+| `/ban` | Reply to a message to ban that user |
+| `/setstrike [n]` | Set auto-mute threshold (default: 3) |
+
+---
+
+## Stack
+
+- Python 3.11+
+- [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot) v21
+- [httpx](https://www.python-httpx.org/) for async HTTP
+- [mplfinance](https://github.com/matplotlib/mplfinance) for chart generation
+- SQLite for state persistence
+- Deployed on [Railway](https://railway.app)
+
+---
+
+## Self-hosting
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/Kekcoin69420/kekcoin-bot.git
+cd kekcoin-bot
+pip install -r requirements.txt
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+```
+
+Fill in `.env`:
+
+```
+BOT_TOKEN=your_bot_token_from_botfather
+GROUP_CHAT_ID=-1001234567890
+ADMIN_IDS=123456789,987654321
+HELIUS_API_KEY=your_helius_key
+DB_PATH=./data/kek.db
+```
+
+### 3. Run
+
+```bash
+python bot.py
+```
+
+### Bot permissions required in group
 
 Make the bot an admin with:
 - Delete messages
 - Restrict members
-- Pin messages
 
-## Commands
+---
 
-| Command | Description |
-|---|---|
-| `/price` | Live $KEK price |
-| `/stats` | Full stats including holders |
-| `/ca` | Contract address |
-| `/chart` | DexScreener link |
-| `/buy` | Buy instructions |
-| `/ath` | All-time high |
-| `/praise` | Praise Kek |
-| `/kek` | Random lore |
-| `/moonmath [amount]` | Bag value calculator |
-| `/hodlcheck [price]` | P&L from entry price |
-| `/setwhale [usd]` | Admin: set whale threshold |
-| `/addfud [keyword]` | Admin: add FUD keyword |
-| `/removefud [keyword]` | Admin: remove FUD keyword |
-| `/listfud` | Admin: list FUD keywords |
-| `/announce [text]` | Admin: post announcement |
-| `/warn` | Admin: reply to warn user |
-| `/ban` | Admin: reply to ban user |
-| `/setstrike [n]` | Admin: set mute threshold |
+## Deploy to Railway
+
+1. Fork this repo
+2. New Railway project → Deploy from GitHub → select your fork
+3. Add environment variables (see `.env.example`)
+4. Add a Railway Volume mounted at `/data`
+5. Railway auto-detects the `Procfile`
+
+---
+
+## Contract
+
+```
+BY4ttYDiMWsyBebNNjNoSfA3krvZvUaPaaYdJsWmpump
+```
+
+Always verify the CA before buying. 𓂀
+
+---
+
+## License
+
+MIT — fork it, run your own, build on it. Praise Kek.

@@ -7,7 +7,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 import api
 import db
-from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL
+from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL
 
 
 def _fmt_usd(n: float) -> str:
@@ -27,7 +27,11 @@ def _price_buttons() -> InlineKeyboardMarkup:
         ],
         [
             InlineKeyboardButton("📊 Chart", url=DEXSCREENER_CHART_URL),
-            InlineKeyboardButton("📜 Copy CA", callback_data="copy_ca"),
+            InlineKeyboardButton("🌐 Website", url=WEBSITE_URL),
+        ],
+        [
+            InlineKeyboardButton("🐦 Twitter / X", url=TWITTER_URL),
+            InlineKeyboardButton("💬 Telegram", url=TELEGRAM_URL),
         ],
     ])
 

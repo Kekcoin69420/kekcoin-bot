@@ -1,9 +1,8 @@
 import random
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 import db, api
-
-TOTAL_SUPPLY = 1_000_000_000
+from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL, TOTAL_SUPPLY
 
 KEK_PHRASES = [
     "𓂀 The ancient ones did not die. They became memes. 𓂀",
@@ -123,4 +122,26 @@ async def cmd_hodlcheck(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
         f"Now: ${current:.10f}".rstrip("0") + f"\n"
         f"P&L: {sign}{pct:.2f}%\n\n"
         f"𓂀 {'WAGMI. The faithful are rewarded.' if pct >= 0 else 'The temple tests your faith. HODL.'}"
+    )
+
+
+async def cmd_links(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(
+        "𓂀 <b>$KEK — OFFICIAL LINKS</b> 𓂀\n\n"
+        "Everything you need. Nothing you don't.",
+        parse_mode="HTML",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("🌐 Website", url=WEBSITE_URL)],
+            [
+                InlineKeyboardButton("🐦 Twitter / X", url=TWITTER_URL),
+                InlineKeyboardButton("💬 Telegram", url=TELEGRAM_URL),
+            ],
+            [
+                InlineKeyboardButton("📊 Chart", url=DEXSCREENER_CHART_URL),
+            ],
+            [
+                InlineKeyboardButton("⚡ Buy on Jupiter", url=JUPITER_URL),
+                InlineKeyboardButton("🔥 Pump.fun", url=PUMPFUN_URL),
+            ],
+        ]),
     )

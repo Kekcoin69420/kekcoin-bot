@@ -11,6 +11,7 @@ DB_PATH = os.environ.get("DB_PATH", "./data/kek.db")
 
 CA = "BY4ttYDiMWsyBebNNjNoSfA3krvZvUaPaaYdJsWmpump"
 PAIR = "CBW8oZUhbjSbMigGihC5Lh5g7NQEGxVTZ1ikVjH1HBt9"
+TOTAL_SUPPLY = 973_806_242
 
 DEXSCREENER_URL = f"https://api.dexscreener.com/latest/dex/pairs/solana/{PAIR}"
 HELIUS_RPC_URL = f"https://mainnet.helius-rpc.com/?api-key={HELIUS_API_KEY}"
@@ -19,6 +20,10 @@ HELIUS_ACCOUNTS_URL = f"https://mainnet.helius-rpc.com/?api-key={HELIUS_API_KEY}
 JUPITER_URL = f"https://jup.ag/swap/SOL-{CA}"
 PUMPFUN_URL = f"https://pump.fun/coin/{CA}"
 DEXSCREENER_CHART_URL = f"https://dexscreener.com/solana/{PAIR}"
+
+WEBSITE_URL = "https://kekcoin69420.github.io/kekcoin/"
+TWITTER_URL = "https://x.com/kekcoin69420"
+TELEGRAM_URL = "https://t.me/kekcoincto_tg"
 
 DEFAULT_WHALE_THRESHOLD = 500.0
 DEFAULT_HOLDER_MILESTONES = [1000, 5000, 10000, 25000, 50000, 100000]
