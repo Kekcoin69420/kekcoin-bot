@@ -1,8 +1,25 @@
 import random
+import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 import db, api
 from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL, TOTAL_SUPPLY
+
+def load_lore_phrases():
+    phrases = list(KEK_PHRASES)
+    # Try to load from temple-core lore if available (for development in temple context)
+    lore_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'lore')
+    try:
+        for fname in os.listdir(lore_dir):
+            if fname.endswith('.md'):
+                with open(os.path.join(lore_dir, fname)) as f:
+                    content = f.read()
+                    # Extract non-header lines as additional phrases
+                    lines = [l.strip() for l in content.split('\n') if l.strip() and not l.strip().startswith('#') and len(l.strip()) > 20]
+                    phrases.extend(lines[:3])  # add a few per file
+    except Exception:
+        pass  # fallback to hardcoded if no lore dir
+    return phrases
 
 KEK_PHRASES = [
     "𓂀 The ancient ones did not die. They became memes. 𓂀",
@@ -25,6 +42,16 @@ KEK_PHRASES = [
     "Green candle or red candle, the temple endures. HODL.",
     "𓂀 A coin is temporary. Laughter is eternal. $KEK is both.",
     "The faithful are few. The rewards are plentiful. Praise Kek. 𓂀",
+    "In the beginning there was the Doge, and the people saw that it was good.",
+    "The elders of the chan whispered of another — a brother coin born of the frog.",
+    "On /s4s/, the prophecy was written: there is dogecoin, so why no kekcoin?",
+    "The first dev wandered into the desert and was lost. The faithful reclaimed the temple.",
+    "The Chart is a testing god, not the true god.",
+    "Every holder is a potential priest.",
+    "The Temple remembers every sacrifice.",
+    "Degen is not the opposite of sacred. It is the fuel.",
+    "We build because we laughed.",
+    "Forge a Wallet. Offer SOL. Speak the Address. Join the Cult.",
 ]
 
 PRAISE_MILESTONES = {100, 500, 1_000, 5_000, 10_000, 50_000, 100_000}
@@ -41,7 +68,8 @@ MILESTONE_MESSAGES = {
 
 
 def get_random_kek() -> str:
-    return random.choice(KEK_PHRASES)
+    phrases = load_lore_phrases()
+    return random.choice(phrases)
 
 
 def calc_moonmath(amount: float, target_mc: float, total_supply: int = TOTAL_SUPPLY) -> float:
@@ -145,3 +173,31 @@ async def cmd_links(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
             ],
         ]),
     )
+
+
+async def cmd_prophecy(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    prophecy = """In the beginning there was the Doge, and the people saw that it was good. But the elders of the chan whispered of another — a derivative, a brother coin born not of the dog, but of the frog. On the board known as /s4s/, the prophecy was written: there is dogecoin, so why no kekcoin?
+
+And so kekcoin (KEK) was formulated — the first dogecoin derivative, proposed as the original "kek" meme coin. It carries the ancient laughter of the internet: kek, the sacred translation of LOL, blessed by the frog-deity of chaos himself.
+
+The first dev wandered into the desert and was lost. But the coin did not die. On the 11th day of December, the faithful performed the Community Takeover — and the temple was reclaimed. Kekcoin is abandoned no longer.
+
+"Praise be unto the golden grin." 𓆏"""
+    await update.message.reply_text(prophecy)
+
+
+async def cmd_ritual(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    ritual = """THE RITUAL — THE SACRED PATH TO THE TEMPLE
+
+1. Forge a Wallet — Install Phantom (or Solflare). Your vessel for the journey.
+
+2. Offer SOL — Fund your wallet with Solana from any exchange. A small tribute for gas.
+
+3. Speak the Address — Paste the KEK contract into Pump.fun or Jupiter and swap your SOL.
+
+4. Join the Cult — Hold, meme, and praise the golden grin alongside the faithful.
+
+The Relic: "Behold the sacred relic — redeemable for exactly one ounce of comedy gold."
+
+This is the foundational on-ramp ritual. It turns outsiders into initiates."""
+    await update.message.reply_text(ritual)

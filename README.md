@@ -38,6 +38,10 @@ The official community bot for [$KEK](https://kekcoin69420.github.io/kekcoin/) â
 | `/kek` | Random $KEK lore quote |
 | `/moonmath [amount]` | Bag value at various MC targets |
 | `/hodlcheck [entry price]` | Your P&L from entry price |
+| `/prophecy` | The sacred prophecy of the Temple |
+| `/ritual` | The ritual to enter the Temple |
+
+See the [kekcoin-temple-core](https://github.com/Kekcoin69420/kekcoin-temple-core) repo for full lore, voice system, rituals, and blueprints. The bot integrates the Temple canon.
 
 ### Admin only
 | Command | Description |
