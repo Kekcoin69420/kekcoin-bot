@@ -79,6 +79,24 @@ async def get_holder_count() -> int | None:
         return None
 
 
+async def get_candles(timeframe: str = "minute", aggregate: int = 15, limit: int = 100) -> list[dict]:
+    """Fetch OHLCV candle data from GeckoTerminal. Returns [] on failure."""
+    url = f"https://api.geckoterminal.com/api/v2/networks/solana/pools/{PAIR}/ohlcv/{timeframe}"
+    params = {"aggregate": aggregate, "limit": limit, "currency": "usd"}
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.get(url, params=params, headers={"Accept": "application/json"})
+            resp.raise_for_status()
+            rows = resp.json()["data"]["attributes"]["ohlcv_list"]
+        return [
+            {"time": r[0], "open": float(r[1]), "high": float(r[2]),
+             "low": float(r[3]), "close": float(r[4]), "volume": float(r[5])}
+            for r in rows
+        ]
+    except Exception:
+        return []
+
+
 def parse_swap_usd(tx: dict, current_price: float) -> tuple[float, str] | None:
     """
     Parse a transaction to determine swap USD value and direction.
