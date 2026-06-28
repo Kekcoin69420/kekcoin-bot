@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from telegram import Update
+from telegram import Update, ChatPermissions
 from telegram.ext import ContextTypes
 import db
 
@@ -26,7 +26,7 @@ async def antifud_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> Non
 
     # Delete the offending message
     try:
-        await ctx.bot.delete_message(chat_id=group_id, message_id=msg.message_id)
+        await ctx.bot.delete_message(chat_id=msg.chat.id, message_id=msg.message_id)
     except Exception:
         pass  # may fail if already deleted
 
@@ -43,15 +43,17 @@ async def antifud_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> Non
             await ctx.bot.restrict_chat_member(
                 chat_id=group_id,
                 user_id=user.id,
-                permissions={"can_send_messages": False,
-                             "can_send_audios": False,
-                             "can_send_documents": False,
-                             "can_send_photos": False,
-                             "can_send_videos": False,
-                             "can_send_video_notes": False,
-                             "can_send_voice_notes": False,
-                             "can_send_polls": False,
-                             "can_send_other_messages": False},
+                permissions=ChatPermissions(
+                    can_send_messages=False,
+                    can_send_audios=False,
+                    can_send_documents=False,
+                    can_send_photos=False,
+                    can_send_videos=False,
+                    can_send_video_notes=False,
+                    can_send_voice_notes=False,
+                    can_send_polls=False,
+                    can_send_other_messages=False,
+                ),
                 until_date=until
             )
         except Exception:
@@ -68,12 +70,12 @@ async def antifud_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> Non
                 pass
 
         await ctx.bot.send_message(
-            chat_id=group_id,
+            chat_id=msg.chat.id,
             text=f"🚫 {name} has been muted for 24h. The temple is cleansed. 𓂀"
         )
     else:
         await ctx.bot.send_message(
-            chat_id=group_id,
+            chat_id=msg.chat.id,
             text=f"𓂀 The temple does not welcome FUD. The faithful hold.\n\n"
                  f"{name}: strike {count}/{threshold}."
         )
