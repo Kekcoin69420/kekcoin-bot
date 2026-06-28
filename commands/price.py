@@ -12,7 +12,7 @@ def _fmt_usd(n: float) -> str:
     if n >= 1: return f"${n:.4f}"
     # tiny price: find leading zeros
     s = f"{n:.10f}".rstrip("0")
-    return s if s.startswith("$") else f"${s.lstrip('$')}"
+    return f"${s}"
 
 
 def fmt_price(data: dict) -> str:
@@ -80,7 +80,8 @@ async def cmd_ca(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
 async def cmd_chart(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         f"📊 [View $KEK Chart on DexScreener]({DEXSCREENER_CHART_URL})\n\nPraise Kek 𓂀",
-        parse_mode="Markdown"
+        parse_mode="Markdown",
+        disable_web_page_preview=True
     )
 
 
