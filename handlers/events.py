@@ -1,3 +1,4 @@
+import html
 from telegram import Update, ChatMemberUpdated, ChatMember, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL
@@ -16,7 +17,7 @@ async def welcome_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> Non
         return
 
     user = member_update.new_chat_member.user
-    name = user.first_name or "faithful one"
+    name = html.escape(user.first_name or "faithful one")
 
     await ctx.bot.send_message(
         chat_id=member_update.chat.id,
