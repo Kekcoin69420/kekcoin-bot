@@ -21,7 +21,7 @@ JUPITER_URL = f"https://jup.ag/swap/SOL-{CA}"
 PUMPFUN_URL = f"https://pump.fun/coin/{CA}"
 DEXSCREENER_CHART_URL = f"https://dexscreener.com/solana/{PAIR}"
 
-WEBSITE_URL = "https://kekcoin69420.github.io/kekcoin/"
+WEBSITE_URL = "https://www.kektemple.com/"
 TWITTER_URL = "https://x.com/kekcoin69420"
 TELEGRAM_URL = "https://t.me/kekcoincto_tg"
 

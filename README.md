@@ -1,6 +1,6 @@
 # 𓂀 Kekcoin Telegram Bot
 
-The official community bot for [$KEK](https://kekcoin69420.github.io/kekcoin/) — the first dogecoin derivative, born on 4chan's /s4s/, community-owned since December 11, 2025.
+The official community bot for [$KEK](https://www.kektemple.com/) — the first dogecoin derivative, born on 4chan's /s4s/, community-owned since December 11, 2025.
 
 [![Twitter](https://img.shields.io/badge/Twitter-@kekcoin69420-1DA1F2?logo=twitter)](https://x.com/kekcoin69420)
 [![Telegram](https://img.shields.io/badge/Telegram-Join%20the%20Temple-2CA5E0?logo=telegram)](https://t.me/kekcoincto_tg)
