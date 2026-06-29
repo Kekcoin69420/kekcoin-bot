@@ -89,10 +89,7 @@ async def cmd_join(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
     args = ctx.args
     if not args:
         await update.message.reply_text(
-            "To join the Praise Board, send:
-/join YourName
-
-Example: /join Kek Maximus"
+            "To join the Praise Board, send:\n/join YourName\n\nExample: /join Kek Maximus"
         )
         return
     display_name = " ".join(args).strip()[:40]
@@ -106,14 +103,8 @@ Example: /join Kek Maximus"
         if count > 0:
             db_supabase.sync_praise(user.id, count)
         await update.message.reply_text(
-            f"YOU HAVE JOINED THE BOARD
-
-Name: {display_name}
-Rank: Pilgrim
-
-"
-            f"Offer praises with /praise to rise through the ranks.
-"
+            f"YOU HAVE JOINED THE BOARD\n\nName: {display_name}\nRank: Pilgrim\n\n"
+            f"Offer praises with /praise to rise through the ranks.\n"
             f"Your deeds are now visible on the Temple website."
         )
     else:
