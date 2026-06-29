@@ -36,3 +36,7 @@ DEFAULT_FUD_KEYWORDS = [
     "rug", "rugpull", "scam", "dead", "honeypot",
     "dev ran", "abandoned", "exit scam", "sell now", "worthless"
 ]
+
+# Supabase (for live praise board on website)
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")

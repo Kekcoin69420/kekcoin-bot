@@ -13,7 +13,7 @@ from config import (
     DEFAULT_DIGEST_HOUR_UTC
 )
 from commands.price import cmd_price, cmd_stats, cmd_ca, cmd_chart, cmd_buy, cmd_ath
-from commands.community import cmd_praise, cmd_kek, cmd_moonmath, cmd_hodlcheck, cmd_links, cmd_prophecy, cmd_ritual, cmd_help, cmd_praiseboard, cmd_about, cmd_lore, cmd_initiate, cmd_relic, cmd_fud, cmd_whale, cmd_voice, cmd_canon
+from commands.community import cmd_praise, cmd_join, cmd_kek, cmd_moonmath, cmd_hodlcheck, cmd_links, cmd_prophecy, cmd_ritual, cmd_help, cmd_praiseboard, cmd_about, cmd_lore, cmd_initiate, cmd_relic, cmd_fud, cmd_whale, cmd_voice, cmd_canon
 from commands.admin import (
     cmd_setwhale, cmd_addfud, cmd_removefud, cmd_listfud,
     cmd_announce, cmd_warn, cmd_ban, cmd_setstrike
@@ -59,6 +59,7 @@ def main() -> None:
     app.add_handler(CommandHandler("help", cmd_help))
     app.add_handler(CommandHandler("h", cmd_help))
     app.add_handler(CommandHandler("praiseboard", cmd_praiseboard))
+    app.add_handler(CommandHandler("join", cmd_join))
     app.add_handler(CommandHandler("about", cmd_about))
     app.add_handler(CommandHandler("lore", cmd_lore))
     app.add_handler(CommandHandler("initiate", cmd_initiate))

@@ -3,6 +3,7 @@ import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 import db, api
+import db_supabase
 from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL, TOTAL_SUPPLY, ADMIN_IDS
 
 def load_lore_phrases():
@@ -83,6 +84,44 @@ def calc_hodlcheck(entry: float, current: float) -> float:
     return ((current - entry) / entry) * 100
 
 
+async def cmd_join(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    user = update.effective_user
+    args = ctx.args
+    if not args:
+        await update.message.reply_text(
+            "To join the Praise Board, send:
+/join YourName
+
+Example: /join Kek Maximus"
+        )
+        return
+    display_name = " ".join(args).strip()[:40]
+    if len(display_name) < 2:
+        await update.message.reply_text("Name must be at least 2 characters. Try again.")
+        return
+    ok = db_supabase.join_board(user.id, display_name)
+    if ok:
+        conn = ctx.bot_data["db"]
+        count = db.get_user_praise_count(conn, user.id)
+        if count > 0:
+            db_supabase.sync_praise(user.id, count)
+        await update.message.reply_text(
+            f"YOU HAVE JOINED THE BOARD
+
+Name: {display_name}
+Rank: Pilgrim
+
+"
+            f"Offer praises with /praise to rise through the ranks.
+"
+            f"Your deeds are now visible on the Temple website."
+        )
+    else:
+        await update.message.reply_text(
+            "The temple records are sealed for now. Try again shortly."
+        )
+
+
 async def cmd_praise(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
     conn = ctx.bot_data["db"]
     user = update.effective_user
@@ -92,6 +131,8 @@ async def cmd_praise(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
     msg = f"𓂀 PRAISE OFFERED 𓂀\n\n{username}, your praises: {user_count}\nTemple total: {total:,}"
     if total in PRAISE_MILESTONES:
         msg = MILESTONE_MESSAGES.get(total, msg)
+    if db_supabase.is_on_board(user.id):
+        db_supabase.sync_praise(user.id, user_count)
     await update.message.reply_text(msg)
 
 
