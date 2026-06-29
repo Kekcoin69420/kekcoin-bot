@@ -3,7 +3,7 @@ import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 import db, api
-from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL, TOTAL_SUPPLY, ADMIN_IDS, ADMIN_IDS
+from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL, TOTAL_SUPPLY, ADMIN_IDS
 
 def load_lore_phrases():
     phrases = list(KEK_PHRASES)
@@ -332,23 +332,32 @@ async def cmd_canon(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
 async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
     is_admin = update.effective_user.id in ADMIN_IDS
 
-    help_text = """<b>𓂀 KEK ORACLE — SACRED COMMANDS 𓂀</b>
+    help_text = """𓂀 <b>KEK ORACLE — SACRED COMMANDS</b> 𓂀
 
 <b>Price & Market:</b>
 /price — Live price + 24h change, MC, volume
-/stats — Full stats (incl. holders & txns)
+/stats — Full stats incl. holders & txns
 /chart — 15m candlestick chart image
 /ca — Contract address
-/buy — How to buy $KEK
+/buy — How to acquire $KEK
 /ath — All-time high
 /links — Official links
 
 <b>Temple & Lore:</b>
-/praise — Offer praise to Kek (with milestones)
+/praise — Offer praise to Kek (milestones!)
+/praiseboard — Top praisers in the Temple
 /kek — Random lore from the canon
+/lore — Deeper lore from the canon
+/voice — Random Voice of the Temple
+/canon — The Seven Sacred Truths
 /prophecy — The sacred origin prophecy
 /ritual — The path into the Temple
-/moonmath [amount] — Future bag value
+/about — Temple intro
+/initiate — Guide for new members
+/relic — The coin as sacred relic
+/fud — FUD keywords currently watched
+/whale — Current whale alert threshold
+/moonmath [amount] — Future bag value calc
 /hodlcheck [price] — Your P&L from entry
 
 """
@@ -364,80 +373,5 @@ async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
 https://github.com/Kekcoin69420/kekcoin-temple-core
 
 Praise Kek! 𓂀"""
-
-    await update.message.reply_text(help_text, parse_mode="HTML")
-
-
-async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = update.effective_user.id
-    is_admin = user_id in ADMIN_IDS
-
-    help_text = """<b>𓂀 KEK ORACLE — COMMANDS 𓂀</b>
-
-<b>Price & Market:</b>
-/price — Current price + 24h change
-/stats — Full stats (MC, vol, holders, txns)
-/chart — 15m candlestick image
-/ca — Contract address
-/buy — How to buy $KEK
-/ath — All-time high
-/links — Official links
-
-<b>Temple & Lore:</b>
-/praise — Offer praise to Kek (with milestones)
-/kek — Random lore from the canon
-/prophecy — The sacred origin prophecy
-/ritual — The path into the Temple
-/moonmath [amount] — Future bag value
-/hodlcheck [price] — Your P&L from entry
-
-<b>Admin only:</b>
-/setwhale /addfud /removefud /listfud
-/announce /warn /ban /setstrike
-
-For the full Temple canon, Voice System, rituals & blueprints:
-https://github.com/Kekcoin69420/kekcoin-temple-core
-
-Praise Kek! 𓂀"""
-
-    if is_admin:
-        help_text += "\n\n<i>You are a Keeper of the Temple.</i>"
-
-    await update.message.reply_text(help_text, parse_mode="HTML")
-
-
-async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
-    is_admin = update.effective_user.id in [int(x) for x in os.environ.get("ADMIN_IDS", "").split(",")] if "ADMIN_IDS" in os.environ else False
-
-    help_text = """𓂀 <b>KEK ORACLE — SACRED COMMANDS</b> 𓂀
-
-<b>Price & Market:</b>
-/price — Live price + 24h change, MC, volume
-/stats — Full stats incl. holders & txns
-/chart — 15m candlestick chart image
-/ca — Contract address
-/buy — How to acquire $KEK
-/ath — All-time high
-/links — Official links
-
-<b>Temple & Lore:</b>
-/praise — Offer praise to Kek (milestones!)
-/kek — Random lore from the canon
-/prophecy — The sacred origin prophecy
-/ritual — The path into the Temple
-/moonmath [amount] — Future bag value calc
-/hodlcheck [price] — Your P&L from entry
-
-<b>Admin only:</b>
-/setwhale /addfud /removefud /listfud
-/announce /warn /ban /setstrike
-
-For the full Temple canon, Voice System, rituals & blueprints:
-https://github.com/Kekcoin69420/kekcoin-temple-core
-
-Praise Kek! 𓂀"""
-
-    if is_admin:
-        help_text += "\n\n<i>You are recognized as a keeper of the Temple.</i>"
 
     await update.message.reply_text(help_text, parse_mode="HTML")
