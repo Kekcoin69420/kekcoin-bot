@@ -43,6 +43,13 @@ def _create_tables(conn: sqlite3.Connection) -> None:
         last_strike_at TEXT
     );
 
+    CREATE TABLE IF NOT EXISTS user_praises (
+        user_id INTEGER PRIMARY KEY,
+        username TEXT,
+        count INTEGER DEFAULT 0,
+        last_praise_at TEXT
+    );
+
     CREATE TABLE IF NOT EXISTS whale_state (
         id INTEGER PRIMARY KEY CHECK (id = 1),
         last_signature TEXT,
@@ -94,6 +101,23 @@ def increment_praise(conn: sqlite3.Connection) -> int:
     conn.execute("UPDATE praise SET count=count+1, updated_at=? WHERE id=1", (_now(),))
     conn.commit()
     return get_praise(conn)
+
+# --- User Praises for board ---
+def increment_user_praise(conn: sqlite3.Connection, user_id: int, username: str) -> int:
+    conn.execute("""
+        INSERT INTO user_praises (user_id, username, count, last_praise_at) VALUES (?, ?, 1, ?)
+        ON CONFLICT(user_id) DO UPDATE SET count=count+1, username=excluded.username, last_praise_at=excluded.last_praise_at
+    """, (user_id, username, _now()))
+    conn.commit()
+    return get_user_praise_count(conn, user_id)
+
+def get_user_praise_count(conn: sqlite3.Connection, user_id: int) -> int:
+    row = conn.execute("SELECT count FROM user_praises WHERE user_id=?", (user_id,)).fetchone()
+    return row["count"] if row else 0
+
+def get_praise_board(conn: sqlite3.Connection, limit: int = 5) -> list:
+    rows = conn.execute("SELECT username, count FROM user_praises ORDER BY count DESC LIMIT ?", (limit,)).fetchall()
+    return [(r["username"], r["count"]) for r in rows]
 
 
 # --- Settings ---

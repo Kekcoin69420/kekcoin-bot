@@ -40,6 +40,16 @@ The official community bot for [$KEK](https://kekcoin69420.github.io/kekcoin/) â
 | `/hodlcheck [entry price]` | Your P&L from entry price |
 | `/prophecy` | The sacred prophecy of the Temple |
 | `/ritual` | The ritual to enter the Temple |
+| `/help` or `/h` | List all commands (admins see admin ones too) |
+| `/about` | Temple intro |
+| `/lore` | Deeper lore from the canon |
+| `/initiate` | Guide for new members |
+| `/relic` | The coin as sacred relic |
+| `/fud` | Current fud keywords watched |
+| `/praiseboard` | Top praisers |
+| `/whale` | Current whale threshold |
+| `/voice` | Random voice of the Temple |
+| `/canon` | The seven sacred truths |
 
 See the [kekcoin-temple-core](https://github.com/Kekcoin69420/kekcoin-temple-core) repo for full lore, voice system, rituals, and blueprints. The bot integrates the Temple canon.
 

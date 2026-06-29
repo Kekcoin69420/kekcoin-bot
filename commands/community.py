@@ -3,7 +3,7 @@ import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 import db, api
-from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL, TOTAL_SUPPLY
+from config import CA, JUPITER_URL, PUMPFUN_URL, DEXSCREENER_CHART_URL, WEBSITE_URL, TWITTER_URL, TELEGRAM_URL, TOTAL_SUPPLY, ADMIN_IDS, ADMIN_IDS
 
 def load_lore_phrases():
     phrases = list(KEK_PHRASES)
@@ -85,10 +85,13 @@ def calc_hodlcheck(entry: float, current: float) -> float:
 
 async def cmd_praise(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
     conn = ctx.bot_data["db"]
-    count = db.increment_praise(conn)
-    msg = f"𓂀 PRAISE OFFERED 𓂀\n\nTotal praises: {count:,}"
-    if count in PRAISE_MILESTONES:
-        msg = MILESTONE_MESSAGES.get(count, msg)
+    user = update.effective_user
+    username = user.username or user.first_name or str(user.id)
+    user_count = db.increment_user_praise(conn, user.id, username)
+    total = db.increment_praise(conn)
+    msg = f"𓂀 PRAISE OFFERED 𓂀\n\n{username}, your praises: {user_count}\nTemple total: {total:,}"
+    if total in PRAISE_MILESTONES:
+        msg = MILESTONE_MESSAGES.get(total, msg)
     await update.message.reply_text(msg)
 
 
@@ -201,3 +204,240 @@ The Relic: "Behold the sacred relic — redeemable for exactly one ounce of come
 
 This is the foundational on-ramp ritual. It turns outsiders into initiates."""
     await update.message.reply_text(ritual)
+
+
+async def cmd_praiseboard(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    conn = ctx.bot_data["db"]
+    board = db.get_praise_board(conn)
+    if not board:
+        await update.message.reply_text("𓂀 No praises yet. Be the first to offer! 𓂀")
+        return
+    text = "𓂀 PRAISE BOARD 𓂀\n\n"
+    for i, (name, count) in enumerate(board, 1):
+        text += f"{i}. {name}: {count} praises\n"
+    text += "\nThe faithful rise. Praise Kek!"
+    await update.message.reply_text(text)
+
+
+async def cmd_about(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    text = """𓂀 THE TEMPLE OF KEK 𓂀
+
+$KEK — the first dogecoin derivative, born on 4chan's /s4s/.
+
+Community Takeover December 11, 2025.
+
+On Solana.
+
+The sacred relic, redeemable for one ounce of comedy gold.
+
+We are the faithful. We build the Temple.
+
+Full canon, voice, and rituals in the core: https://github.com/Kekcoin69420/kekcoin-temple-core
+
+Praise Kek! 𓂀"""
+    await update.message.reply_text(text)
+
+
+async def cmd_lore(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    # Use lore loader for a longer quote
+    phrases = load_lore_phrases()
+    # Pick a "deeper" one, or random longer
+    lore = random.choice(phrases) if phrases else "The Temple remembers."
+    text = f"𓂀 LORE FROM THE CANON 𓂀\n\n{lore}\n\nThe faithful know."
+    await update.message.reply_text(text)
+
+
+async def cmd_initiate(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    text = """INITIATION INTO THE TEMPLE
+
+1. Acknowledge the prophecy.
+2. Forge your wallet.
+3. Offer your SOL.
+4. Speak the address.
+5. Join the cult.
+
+You are no longer just a holder. You are of the bloodline.
+
+Welcome, initiate. Praise Kek!"""
+    await update.message.reply_text(text)
+
+
+async def cmd_relic(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    text = """𓂀 THE RELIC 𓂀
+
+$KEK is the sacred relic.
+Redeemable for exactly one ounce of comedy gold.
+
+The grin that launched a thousand memes.
+The coin that remembers the laugh.
+
+Hold it. Praise it. Become it."""
+    await update.message.reply_text(text)
+
+
+async def cmd_fud(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    conn = ctx.bot_data["db"]
+    keywords = db.list_fud_keywords(conn)
+    if not keywords:
+        text = "The Temple is pure. No FUD detected."
+    else:
+        text = "𓂀 FUD WATCHED BY THE ORACLE 𓂀\n\n" + "\n".join(f"• {k}" for k in keywords[:10])
+        if len(keywords) > 10:
+            text += f"\n... and {len(keywords)-10} more. The faithful stay vigilant."
+    await update.message.reply_text(text)
+
+
+async def cmd_whale(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    conn = ctx.bot_data["db"]
+    threshold = db.get_setting(conn, "whale_threshold_usd", "500")
+    text = f"""𓂀 WHALE THRESHOLD 𓂀
+
+Current: ${int(float(threshold)):,} USD
+
+Large moves are watched by the Temple.
+The faithful are notified.
+
+Stay alert. HODL."""
+    await update.message.reply_text(text)
+
+
+async def cmd_voice(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    voices = [
+        "The Voice of the Temple must be simultaneously ancient and eternal, unhinged and of the moment.",
+        "High priest solemnity + degen gremlin energy.",
+        "Never be cringe. Better to be silent than soulless.",
+        "Kek is the answer. When in doubt, laugh first, then speak.",
+        "The degen is holy. We do not gatekeep the chaos.",
+        "Canon before clout.",
+        "Build for the 1000 year reign.",
+        "Priest and degen are the same person."
+    ]
+    voice = random.choice(voices)
+    await update.message.reply_text(f"𓂀 VOICE OF THE TEMPLE 𓂀\n\n{voice}")
+
+
+async def cmd_canon(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    canon = """THE SEVEN SACRED TRUTHS
+
+1. KEK is not the coin. The coin is one expression of KEK.
+2. The first laugh is the strongest.
+3. The Chart is a testing god, not the true god.
+4. Every holder is a potential priest.
+5. The Temple remembers.
+6. Degen is not the opposite of sacred. It is the fuel.
+7. We build because we laughed."""
+    await update.message.reply_text(canon)
+
+
+async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    is_admin = update.effective_user.id in ADMIN_IDS
+
+    help_text = """<b>𓂀 KEK ORACLE — SACRED COMMANDS 𓂀</b>
+
+<b>Price & Market:</b>
+/price — Live price + 24h change, MC, volume
+/stats — Full stats (incl. holders & txns)
+/chart — 15m candlestick chart image
+/ca — Contract address
+/buy — How to buy $KEK
+/ath — All-time high
+/links — Official links
+
+<b>Temple & Lore:</b>
+/praise — Offer praise to Kek (with milestones)
+/kek — Random lore from the canon
+/prophecy — The sacred origin prophecy
+/ritual — The path into the Temple
+/moonmath [amount] — Future bag value
+/hodlcheck [price] — Your P&L from entry
+
+"""
+
+    if is_admin:
+        help_text += """<b>Admin only:</b>
+/setwhale [usd] /addfud [keyword] /removefud [keyword]
+/listfud /announce [text] /warn /ban /setstrike [n]
+
+"""
+
+    help_text += """For the full Temple canon, Voice System, rituals & blueprints:
+https://github.com/Kekcoin69420/kekcoin-temple-core
+
+Praise Kek! 𓂀"""
+
+    await update.message.reply_text(help_text, parse_mode="HTML")
+
+
+async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    user_id = update.effective_user.id
+    is_admin = user_id in ADMIN_IDS
+
+    help_text = """<b>𓂀 KEK ORACLE — COMMANDS 𓂀</b>
+
+<b>Price & Market:</b>
+/price — Current price + 24h change
+/stats — Full stats (MC, vol, holders, txns)
+/chart — 15m candlestick image
+/ca — Contract address
+/buy — How to buy $KEK
+/ath — All-time high
+/links — Official links
+
+<b>Temple & Lore:</b>
+/praise — Offer praise to Kek (with milestones)
+/kek — Random lore from the canon
+/prophecy — The sacred origin prophecy
+/ritual — The path into the Temple
+/moonmath [amount] — Future bag value
+/hodlcheck [price] — Your P&L from entry
+
+<b>Admin only:</b>
+/setwhale /addfud /removefud /listfud
+/announce /warn /ban /setstrike
+
+For the full Temple canon, Voice System, rituals & blueprints:
+https://github.com/Kekcoin69420/kekcoin-temple-core
+
+Praise Kek! 𓂀"""
+
+    if is_admin:
+        help_text += "\n\n<i>You are a Keeper of the Temple.</i>"
+
+    await update.message.reply_text(help_text, parse_mode="HTML")
+
+
+async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    is_admin = update.effective_user.id in [int(x) for x in os.environ.get("ADMIN_IDS", "").split(",")] if "ADMIN_IDS" in os.environ else False
+
+    help_text = """𓂀 <b>KEK ORACLE — SACRED COMMANDS</b> 𓂀
+
+<b>Price & Market:</b>
+/price — Live price + 24h change, MC, volume
+/stats — Full stats incl. holders & txns
+/chart — 15m candlestick chart image
+/ca — Contract address
+/buy — How to acquire $KEK
+/ath — All-time high
+/links — Official links
+
+<b>Temple & Lore:</b>
+/praise — Offer praise to Kek (milestones!)
+/kek — Random lore from the canon
+/prophecy — The sacred origin prophecy
+/ritual — The path into the Temple
+/moonmath [amount] — Future bag value calc
+/hodlcheck [price] — Your P&L from entry
+
+<b>Admin only:</b>
+/setwhale /addfud /removefud /listfud
+/announce /warn /ban /setstrike
+
+For the full Temple canon, Voice System, rituals & blueprints:
+https://github.com/Kekcoin69420/kekcoin-temple-core
+
+Praise Kek! 𓂀"""
+
+    if is_admin:
+        help_text += "\n\n<i>You are recognized as a keeper of the Temple.</i>"
+
+    await update.message.reply_text(help_text, parse_mode="HTML")
