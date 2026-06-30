@@ -13,6 +13,7 @@ from config import (
     DEFAULT_DIGEST_HOUR_UTC
 )
 from commands.price import cmd_price, cmd_stats, cmd_ca, cmd_chart, cmd_buy, cmd_ath
+from commands.bible import cmd_bible, cmd_scripture
 from commands.community import cmd_praise, cmd_join, cmd_kek, cmd_moonmath, cmd_hodlcheck, cmd_links, cmd_prophecy, cmd_ritual, cmd_help, cmd_praiseboard, cmd_about, cmd_lore, cmd_initiate, cmd_relic, cmd_fud, cmd_whale, cmd_voice, cmd_canon
 from commands.admin import (
     cmd_setwhale, cmd_addfud, cmd_removefud, cmd_listfud,
@@ -68,6 +69,8 @@ def main() -> None:
     app.add_handler(CommandHandler("whale", cmd_whale))
     app.add_handler(CommandHandler("voice", cmd_voice))
     app.add_handler(CommandHandler("canon", cmd_canon))
+    app.add_handler(CommandHandler("bible", cmd_bible))
+    app.add_handler(CommandHandler("scripture", cmd_scripture))
 
     # Admin commands
     app.add_handler(CommandHandler("setwhale", cmd_setwhale))

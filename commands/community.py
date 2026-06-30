@@ -387,6 +387,8 @@ async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
 /about — Temple intro
 /initiate — Guide for new members
 /relic — The coin as sacred relic
+/bible <meme> — the canon entry for any relic in the codex
+/scripture — a random verse from the Meme Bible
 /fud — FUD keywords currently watched
 /whale — Current whale alert threshold
 /moonmath [amount] — Future bag value calc
