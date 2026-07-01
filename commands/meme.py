@@ -70,7 +70,6 @@ async def cmd_meme(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
             "<b>With image URL:</b> <code>/meme Title | summary | https://…</code>\n"
             "<b>With category:</b> <code>/meme Title | summary | frog</code>\n"
             "<b>Photo:</b> reply to an image with <code>/meme Title | Temple lore</code>\n\n"
-            "Images are re-encoded server-side — EXIF/GPS metadata stripped before storage.\n"
             "Categories: frog, classic, wojak, reaction, crypto, 4chan, modern\n"
             "Mods review offerings before they enter the Sacred Archive.",
             parse_mode="HTML",
