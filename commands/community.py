@@ -389,6 +389,7 @@ async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
 /relic — The coin as sacred relic
 /bible <meme> — the canon entry for any relic in the codex
 /scripture — a random verse from the Meme Bible
+/meme Title | summary — offer a meme to the Sacred Archive (mod review)
 /fud — FUD keywords currently watched
 /whale — Current whale alert threshold
 /moonmath [amount] — Future bag value calc
@@ -400,6 +401,7 @@ async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
         help_text += """<b>Admin only:</b>
 /setwhale [usd] /addfud [keyword] /removefud [keyword]
 /listfud /announce [text] /warn /ban /setstrike [n]
+/pendingmemes /approvememe [id] /rejectmeme [id] [reason]
 
 """
 

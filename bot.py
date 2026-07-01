@@ -14,6 +14,7 @@ from config import (
 )
 from commands.price import cmd_price, cmd_stats, cmd_ca, cmd_chart, cmd_buy, cmd_ath
 from commands.bible import cmd_bible, cmd_scripture
+from commands.meme import cmd_meme, cmd_pendingmemes, cmd_approvememe, cmd_rejectmeme
 from commands.community import cmd_praise, cmd_join, cmd_kek, cmd_moonmath, cmd_hodlcheck, cmd_links, cmd_prophecy, cmd_ritual, cmd_help, cmd_praiseboard, cmd_about, cmd_lore, cmd_initiate, cmd_relic, cmd_fud, cmd_whale, cmd_voice, cmd_canon
 from commands.admin import (
     cmd_setwhale, cmd_addfud, cmd_removefud, cmd_listfud,
@@ -71,6 +72,7 @@ def main() -> None:
     app.add_handler(CommandHandler("canon", cmd_canon))
     app.add_handler(CommandHandler("bible", cmd_bible))
     app.add_handler(CommandHandler("scripture", cmd_scripture))
+    app.add_handler(CommandHandler("meme", cmd_meme))
 
     # Admin commands
     app.add_handler(CommandHandler("setwhale", cmd_setwhale))
@@ -81,6 +83,9 @@ def main() -> None:
     app.add_handler(CommandHandler("warn", cmd_warn))
     app.add_handler(CommandHandler("ban", cmd_ban))
     app.add_handler(CommandHandler("setstrike", cmd_setstrike))
+    app.add_handler(CommandHandler("pendingmemes", cmd_pendingmemes))
+    app.add_handler(CommandHandler("approvememe", cmd_approvememe))
+    app.add_handler(CommandHandler("rejectmeme", cmd_rejectmeme))
 
     # Anti-FUD (only in groups, non-commands)
     app.add_handler(MessageHandler(
