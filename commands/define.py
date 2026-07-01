@@ -5,7 +5,7 @@ import httpx
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from config import SUPABASE_URL, SUPABASE_ANON_KEY
+from config import SUPABASE_URL, SUPABASE_ANON_KEY, WEBSITE_URL
 
 log = logging.getLogger(__name__)
 COLS = "id,term,cat,definition,origin,related,aka"
@@ -73,6 +73,9 @@ def _format(row: dict) -> str:
         lines += ["", f"origin: {origin}"]
     if related:
         lines += ["", "see also: " + ", ".join(related)]
+    term_id = row.get("id") or term.lower().replace(" ", "-")
+    lex_url = (WEBSITE_URL or "https://www.kektemple.com/").rstrip("/") + f"/lexicon/#{term_id}"
+    lines += ["", lex_url]
     return "\n".join(lines)
 
 
