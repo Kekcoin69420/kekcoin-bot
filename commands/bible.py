@@ -21,9 +21,7 @@ from config import WEBSITE_URL
 
 log = logging.getLogger(__name__)
 
-# Full entries live here on the site. Repoint to WEBSITE_URL + "codex/" once a
-# dedicated codex page ships; for now it links into the meme archive.
-CODEX_BASE = WEBSITE_URL + "memes/"
+CODEX_BASE = WEBSITE_URL + "codex/"
 MAX_LEN = 3500  # keep under Telegram's 4096-char message cap
 COLS = "id,title,year,tier,kek,summary,scripture,source_url"
 
