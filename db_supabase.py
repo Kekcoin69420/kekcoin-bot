@@ -5,7 +5,10 @@ so the bot keeps working even before Supabase is configured.
 import logging
 import re
 import uuid
+
+import httpx
 from config import SUPABASE_URL, SUPABASE_SERVICE_KEY
+from image_sanitize import MAX_IMAGE_BYTES, strip_image_metadata
 
 log = logging.getLogger(__name__)
 _client = None
@@ -110,23 +113,59 @@ def is_on_board(telegram_id: int) -> bool:
         return False
 
 
+def _storage_public_url(path: str) -> str:
+    return f"{SUPABASE_URL}/storage/v1/object/public/meme-submissions/{path}"
+
+
+def is_temple_hosted_url(url: str | None) -> bool:
+    if not url:
+        return False
+    prefix = f"{SUPABASE_URL}/storage/v1/object/public/meme-submissions/"
+    return url.startswith(prefix)
+
+
 def upload_submission_image(slug: str, data: bytes, ext: str = "jpg") -> str | None:
-    """Upload bytes to public meme-submissions bucket. Returns public URL."""
+    """Strip metadata, then upload to public meme-submissions bucket."""
+    cleaned = strip_image_metadata(data)
+    if not cleaned:
+        return None
+    data, ext = cleaned
+
     sb = _get_client()
     if not sb:
         return None
     safe = re.sub(r"[^\w-]", "", slug)[:60] or str(uuid.uuid4())[:8]
     path = f"{safe}.{ext}"
-    mime = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png",
-            "webp": "image/webp", "gif": "image/gif"}.get(ext, "image/jpeg")
+    mime = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png"}.get(ext, "image/jpeg")
     try:
         sb.storage.from_("meme-submissions").upload(
             path, data,
             file_options={"content-type": mime, "upsert": "true"},
         )
-        return f"{SUPABASE_URL}/storage/v1/object/public/meme-submissions/{path}"
+        return _storage_public_url(path)
     except Exception as e:
         log.warning("upload_submission_image failed: %s", e)
+        return None
+
+
+def fetch_and_sanitize_image(url: str, slug: str) -> str | None:
+    """Download external image, strip metadata, re-host on Temple storage."""
+    if is_temple_hosted_url(url):
+        return url
+    try:
+        with httpx.Client(timeout=20.0, follow_redirects=True) as client:
+            res = client.get(url)
+            res.raise_for_status()
+            ctype = (res.headers.get("content-type") or "").split(";")[0].strip().lower()
+            if not ctype.startswith("image/"):
+                log.warning("fetch_and_sanitize_image: not an image (%s)", ctype)
+                return None
+            if len(res.content) > MAX_IMAGE_BYTES:
+                log.warning("fetch_and_sanitize_image: download too large")
+                return None
+            return upload_submission_image(slug, res.content)
+    except Exception as e:
+        log.warning("fetch_and_sanitize_image failed: %s", e)
         return None
 
 
@@ -215,6 +254,11 @@ def approve_meme(prefix: str, admin_id: int) -> dict | None:
     base_slug = _slugify(sub.get("slug") or sub["title"])
     meme_id = _unique_slug(sb, base_slug)
     cat = sub.get("cat") or "modern"
+    img_url = sub.get("img_url")
+    if img_url and not is_temple_hosted_url(img_url):
+        rehosted = fetch_and_sanitize_image(img_url, meme_id)
+        if rehosted:
+            img_url = rehosted
     row = {
         "id": meme_id,
         "title": sub["title"],
@@ -224,7 +268,7 @@ def approve_meme(prefix: str, admin_id: int) -> dict | None:
         "cat": cat,
         "tier": CAT_TIERS.get(cat, "Modern"),
         "kek": 3,
-        "img": sub.get("img_url"),
+        "img": img_url,
         "scripture": _scripture_from(sub),
         "source_url": f"https://www.kektemple.com/memes/#{meme_id}",
     }

@@ -70,6 +70,7 @@ async def cmd_meme(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
             "<b>With image URL:</b> <code>/meme Title | summary | https://…</code>\n"
             "<b>With category:</b> <code>/meme Title | summary | frog</code>\n"
             "<b>Photo:</b> reply to an image with <code>/meme Title | Temple lore</code>\n\n"
+            "Images are re-encoded server-side — EXIF/GPS metadata stripped before storage.\n"
             "Categories: frog, classic, wojak, reaction, crypto, 4chan, modern\n"
             "Mods review offerings before they enter the Sacred Archive.",
             parse_mode="HTML",
@@ -91,6 +92,17 @@ async def cmd_meme(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
         uploaded = await _upload_photo(ctx, photo.file_id, slug)
         if uploaded:
             img_url = uploaded
+
+    if img_url and img_url.startswith("http") and not sb.is_temple_hosted_url(img_url):
+        rehosted = sb.fetch_and_sanitize_image(img_url, slug)
+        if rehosted:
+            img_url = rehosted
+        else:
+            await msg.reply_text(
+                "Could not fetch or sanitize that image URL. "
+                "Use a direct image link (jpg/png/webp/gif, under 5 MB) or reply to a photo."
+            )
+            return
 
     row = sb.submit_meme(
         slug=slug,
