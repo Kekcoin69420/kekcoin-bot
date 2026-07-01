@@ -191,7 +191,8 @@ async def cmd_hodlcheck(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
 async def cmd_links(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         "𓂀 <b>$KEK — OFFICIAL LINKS</b> 𓂀\n\n"
-        "Everything you need. Nothing you don't.",
+        "Everything you need. Nothing you don't.\n\n"
+        "/define &lt;word&gt; — the temple's definition of any meme or crypto term",
         parse_mode="HTML",
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("🌐 Website", url=WEBSITE_URL)],
@@ -389,6 +390,7 @@ async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
 /relic — The coin as sacred relic
 /bible <meme> — the canon entry for any relic in the codex
 /scripture — a random verse from the Meme Bible
+/define &lt;word&gt; — the temple's definition of any meme or crypto term
 /meme Title | summary — offer a meme to the Sacred Archive (mod review)
 /fud — FUD keywords currently watched
 /whale — Current whale alert threshold

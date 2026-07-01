@@ -16,6 +16,7 @@ from commands.price import cmd_price, cmd_stats, cmd_ca, cmd_chart, cmd_buy, cmd
 from commands.bible import cmd_bible, cmd_scripture
 from commands.meme import cmd_meme, cmd_pendingmemes, cmd_approvememe, cmd_rejectmeme
 from commands.community import cmd_praise, cmd_join, cmd_kek, cmd_moonmath, cmd_hodlcheck, cmd_links, cmd_prophecy, cmd_ritual, cmd_help, cmd_praiseboard, cmd_about, cmd_lore, cmd_initiate, cmd_relic, cmd_fud, cmd_whale, cmd_voice, cmd_canon
+from commands.define import cmd_define
 from commands.admin import (
     cmd_setwhale, cmd_addfud, cmd_removefud, cmd_listfud,
     cmd_announce, cmd_warn, cmd_ban, cmd_setstrike
@@ -56,6 +57,7 @@ def main() -> None:
     app.add_handler(CommandHandler("moonmath", cmd_moonmath))
     app.add_handler(CommandHandler("hodlcheck", cmd_hodlcheck))
     app.add_handler(CommandHandler("links", cmd_links))
+    app.add_handler(CommandHandler("define", cmd_define))
     app.add_handler(CommandHandler("prophecy", cmd_prophecy))
     app.add_handler(CommandHandler("ritual", cmd_ritual))
     app.add_handler(CommandHandler("help", cmd_help))
